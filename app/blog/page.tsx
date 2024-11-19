@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   description: "My Next JS blog page",
 };
 
+export type Post = {
+  id: string;
+  title: string;
+  body: string;
+};
+
 export default async function Blog() {
   const posts = await getData();
 
@@ -26,7 +32,7 @@ export default async function Blog() {
       <h1>Blog page</h1>
 
       <ol>
-        {posts.map((post: any) => (
+        {posts.map((post: Post) => (
           <li key={post.id}>
             <i>
               <Link href={`blog/${post.id}`}>{post.title}</Link>

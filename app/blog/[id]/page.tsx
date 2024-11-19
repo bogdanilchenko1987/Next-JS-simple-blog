@@ -1,4 +1,9 @@
 import { Metadata } from "next";
+type Props = {
+  params: {
+    id: string;
+  };
+};
 
 async function getData(id: string) {
   const response = await fetch(
@@ -14,12 +19,6 @@ async function getData(id: string) {
 
   return response.json();
 }
-
-type Props = {
-  params: {
-    id: string;
-  };
-};
 
 export async function generateMetadata({
   params: { id },
