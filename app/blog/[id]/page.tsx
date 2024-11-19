@@ -1,9 +1,4 @@
 import { Metadata } from "next";
-type Props = {
-  params: {
-    id: string;
-  };
-};
 
 async function getData(id: string) {
   const response = await fetch(
@@ -15,24 +10,29 @@ async function getData(id: string) {
     }
   );
 
-  if (!response.ok) throw new Error("Unable to fetch posts!");
-
   return response.json();
 }
 
-export async function generateMetadata({
-  params: { id },
-}: Props): Promise<Metadata> {
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
   const post = await getData(id);
-  return { title: `Post: ${post.title} | Simple Blog` };
+
+  return {
+    title: post.title,
+  };
 }
 
-export default async function Post({ params: { id } }: Props) {
+export default async function Post({ params }: Props) {
+  const { id } = await params;
   const post = await getData(id);
 
   return (
     <>
-      <h3>{post.title}</h3>
+      <h1>{post.title}</h1>
       <p>{post.body}</p>
     </>
   );
