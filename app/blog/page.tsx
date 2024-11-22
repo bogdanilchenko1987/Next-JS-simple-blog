@@ -6,12 +6,6 @@ import { Posts } from "@/components/Posts";
 import { PostsSearch } from "@/components/PostsSearch";
 import { Form } from "@/components/Form";
 
-// import { Metadata } from "next";
-// export const metadata: Metadata = {
-//   title: "Blog | Simple Blog",
-//   description: "My Next JS blog page",
-// };
-
 export default function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
   const [search, setSearch] = useState("");

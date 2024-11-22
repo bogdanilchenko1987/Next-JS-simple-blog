@@ -64,8 +64,13 @@ main a:hover {
 }
 
 form {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: auto;
+  width: 100%;
 }
 
 form button {
@@ -74,6 +79,7 @@ form button {
   color: white;
   border: none;
   margin-left: 5px;
+  height: 25px;
 }
 
 input[type="search"] {
