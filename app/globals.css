@@ -26,9 +26,9 @@ header > a {
   text-decoration: none;
   padding: 0 1rem;
 }
-header > a:hover {
+/* header > a:hover {
   text-decoration: underline;
-}
+} */
 
 h1,
 h2,
@@ -73,6 +73,7 @@ form button {
   cursor: pointer;
   color: white;
   border: none;
+  margin-left: 5px;
 }
 
 input[type="search"] {
@@ -95,4 +96,35 @@ footer > a:hover {
 
 ul {
   list-style: none;
+}
+
+/* CSS */
+.btn-container {
+  text-align: center;
+}
+
+.button {
+  backface-visibility: hidden;
+  background-color: var(--color-active);
+  border-radius: 2px;
+  border-width: 0;
+  margin: 0 5px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+
+  outline: none;
+
+  text-align: center;
+  width: 70px;
+  height: 25px;
+}
+
+.label {
+  display: block;
+  text-align: center;
+}
+
+input {
+  margin-left: 5px;
 }

@@ -1,45 +1,92 @@
-import { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-async function getData() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
-    next: {
-      revalidate: 60,
-    },
-  });
+import { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
+import { addPost, getAllPosts } from "../services/getPosts";
+import { Posts } from "@/components/Posts";
+import { PostsSearch } from "@/components/PostsSearch";
+import { Form } from "@/components/Form";
 
-  if (!response.ok) throw new Error("Unable to fetch posts!");
+// import { Metadata } from "next";
+// export const metadata: Metadata = {
+//   title: "Blog | Simple Blog",
+//   description: "My Next JS blog page",
+// };
 
-  return response.json();
-}
+export default function Blog() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
-export const metadata: Metadata = {
-  title: "Blog | Simple Blog",
-  description: "My Next JS blog page",
-};
+  useEffect(() => {
+    getAllPosts()
+      .then(setPosts)
+      .finally(() => setLoading(false));
+  }, []);
 
-export type Post = {
-  id: string;
-  title: string;
-  body: string;
-};
+  const handleDelete = (id: any) => {
+    setPosts((prev) => prev.filter((post) => post.id !== id));
+  };
 
-export default async function Blog() {
-  const posts = await getData();
+  const handleUpdate = (upd: any) => {
+    // ПРАВИЛЬНО ЗРОБИТИ СЕТПОСТ В ДЕЛІТ І ДЕСЬ ЩЕ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    setPosts(posts.map((post) => (post.id === upd.id ? upd : post)));
+  };
+
+  // ПРАВИЛЬНО ЗРОБИТИ СЕТПОСТ В ДЕЛІТ І ДЕСЬ ЩЕ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  const handleAddPost: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const form: any = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const newpost = await addPost(data);
+    setPosts([...posts, newpost]);
+    form.reset();
+    setIsActive(false);
+  };
+
+  const changeFilter = (e: ChangeEvent<HTMLInputElement>) =>
+    setSearch(e.target.value);
+
+  const filteredContacts = () => {
+    const filterlowerCase = search.toLowerCase();
+    return posts.filter((post) =>
+      post.title.toLowerCase().includes(filterlowerCase)
+    );
+  };
 
   return (
     <>
       <h1>Blog page</h1>
+      {!isActive && (
+        <div className="btn-container">
+          <button className="button" onClick={() => setIsActive(true)}>
+            Add post
+          </button>
+        </div>
+      )}
 
-      <ol>
-        {posts.map((post: Post) => (
-          <li key={post.id}>
-            <i>
-              <Link href={`blog/${post.id}`}>{post.title}</Link>
-            </i>
-          </li>
-        ))}
-      </ol>
+      <div>
+        {isActive && (
+          <Form
+            btnName="Add post"
+            onSubmit={handleAddPost}
+            title={""}
+            post={""}
+          />
+        )}
+      </div>
+      <br />
+      {!isActive && <PostsSearch onSearch={changeFilter} search={search} />}
+      {loading ? (
+        <h3>Loading....</h3>
+      ) : (
+        <Posts
+          posts={filteredContacts()}
+          handleDelete={handleDelete}
+          handleUpdatePost={handleUpdate}
+        />
+      )}
     </>
   );
 }
